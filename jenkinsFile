@@ -48,7 +48,7 @@ pipeline {
   stage('deploy'){
     steps{
          withCredentials([sshUserPrivateKey(credentialsId: 'ec2', keyFileVariable: 'key', usernameVariable: 'username')]) {
-            sh "ssh -i ${key} ${username}@18.205.55.190"
+            sh "ssh -i $key ec2-user@18.205.55.190"
             sh "docker pull mansour100/nodeapp:${env.BUILD_NUMBER} "
             sh "docker run -e    -e -p 3000:3000   mansour100/nodeapp:${env.BUILD_NUMBER}"
             withCredentials([usernamePassword(credentialsId: 'database', passwordVariable: 'passwordDb', usernameVariable: 'usernameDb')]) {
