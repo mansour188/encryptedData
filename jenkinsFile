@@ -5,8 +5,14 @@ pipeline {
         NODEJS_HOME = tool 'nodeJs'
         PATH = "${NODEJS_HOME}/bin:${env.PATH}"
     }
+    
 
       stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
     stage('preflight') {
       steps {
         echo sh(returnStdout: true, script: 'env')
@@ -31,7 +37,7 @@ pipeline {
                 sh 'docker build  -t nodeApp .'
             }
         }
-  }
+  
 
   stage('deploy'){
     steps{
@@ -47,6 +53,8 @@ pipeline {
                         to: 'benahmedmansour89@gmail.com'
             }
         }
+
+
     }
 
     post {
@@ -56,5 +64,4 @@ pipeline {
         }
 
 
-}
 }
