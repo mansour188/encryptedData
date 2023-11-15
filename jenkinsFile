@@ -34,7 +34,7 @@ pipeline {
 
      stage('Containerized Application') {
             steps {
-                sh 'sudo docker build  -t nodeApp .'
+                sh 'docker build  -t nodeApp .'
             }
         }
   
