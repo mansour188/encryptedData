@@ -2,7 +2,7 @@ const crypto = require('crypto');
 require("dotenv").config();
 
 
-const encryptionKey =process.env.CryptoKey;
+const encryptionKey ="0123456789ABCDEF0123456789ABCDEF";
 
 function encrypt(data) {
   const iv = crypto.randomBytes(16).toString('hex');
