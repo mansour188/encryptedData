@@ -1,0 +1,59 @@
+pipeline {
+    agent any
+
+  environment {
+        NODEJS_HOME = tool 'nodeJs'
+        PATH = "${NODEJS_HOME}/bin:${env.PATH}"
+    }
+
+      stages {
+    stage('preflight') {
+      steps {
+        echo sh(returnStdout: true, script: 'env')
+        sh 'node -v'
+      }
+    }
+    stage('build') {
+      steps {
+        sh 'npm --version'
+        sh 'git log --reverse -1'
+        sh 'npm install'
+      }
+    }
+    stage('test') {
+      steps {
+        sh 'npm test'
+      }
+    }
+
+     stage('Containerized Application') {
+            steps {
+                sh 'docker build  -t nodeApp .'
+            }
+        }
+  }
+
+  stage('deploy'){
+    steps{
+         sh 'echo deploy'
+    }
+  }
+  stage('Post-Build Actions') {
+            steps {
+                     mail bcc: '',
+                     body: "hi team this result of pipeline Build URL:( ${env.BUILD_URL})  Git Commit: ${env.GIT_COMMIT}" ,
+                       cc: '', from: '', replyTo: '',
+                       subject: "Jenkins Build ${env.JOB_NAME} #${env.BUILD_NUMBER}" , 
+                        to: 'benahmedmansour89@gmail.com'
+            }
+        }
+    }
+
+    post {
+        always {
+          
+            cleanWs()
+        }
+
+
+}

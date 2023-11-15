@@ -1,8 +1,10 @@
 const express=require("express")
 const {userRouter}=require('./routers/UserRouter')
 const reclamationRouter = require("./routers/Reclamation")
+const cors = require('cors');
 const app=express()
 require("./connect")
+app.use(cors({ origin: '*' }));
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
