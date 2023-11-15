@@ -34,7 +34,13 @@ pipeline {
 
      stage('Containerized Application') {
             steps {
-                sh 'docker build  -t mansour100/nodeapp .'
+                sh "docker build  -t mansour100/nodeapp:${env.BUILD_NUMBER} ."
+                withCredentials([usernamePassword(credentialsId: '1', passwordVariable: 'password', usernameVariable: 'username')]) {
+                       sh "docker login -u ${username} -p ${password}"
+                       
+                       sh "docker push mansour100/nodeapp:${env.BUILD_NUMBER}"
+
+                      }
             }
         }
   
