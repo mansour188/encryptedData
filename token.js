@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
+const KEY="mansour"
 function generateToken(user) {
-  return jwt.sign({ id: user.id,role: user.role }, process.env.KEY, { expiresIn: '10h' });
+  return jwt.sign({ id: user.id,role: user.role }, KEY, { expiresIn: '10h' });
 }
 
 function verifyToken(req, res, next) {
@@ -11,7 +12,7 @@ function verifyToken(req, res, next) {
   }
 
 
-  jwt.verify(token, process.env.KEY, (err, decoded) => {
+  jwt.verify(token, KEY, (err, decoded) => {
     if (err) {
       return res.status(403).json({ message: 'Failed to authenticate token' });
     }
@@ -31,7 +32,7 @@ function checkUserRole(role) {
       token=token.slice(7)
    
   
-      jwt.verify(token, process.env.KEY, (err, decoded) => {
+      jwt.verify(token, KEY, (err, decoded) => {
        
         if (err) {
           return res.status(403).json({ message: 'Failed to authenticate token' });
