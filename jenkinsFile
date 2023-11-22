@@ -45,25 +45,29 @@ pipeline {
         }
   
 
-  stage('deploy'){
-    steps{
-         withCredentials([sshUserPrivateKey(credentialsId: 'ec2', keyFileVariable: 'key', usernameVariable: 'username')]) {
-            sh "ssh -o StrictHostKeyChecking=no  -i $key ec2-user@18.205.55.190"
-            sh "docker pull mansour100/nodeapp:${env.BUILD_NUMBER} "
-            withCredentials([usernamePassword(credentialsId: 'database', passwordVariable: 'passwordDb', usernameVariable: 'usernameDb')]) {
-                sh 'docker stop nodeapp 2>/dev/null || true'
-                 sh 'docker rm nodeapp 2>/dev/null || true'
+stage('deploy') {
+    steps {
+        withCredentials([sshUserPrivateKey(credentialsId: 'ec2', keyFileVariable: 'key', usernameVariable: 'username')]) {
+            script {
+                def remoteHost = 'ec2-user@18.205.55.190'
+                def dockerImage = "mansour100/nodeapp:${env.BUILD_NUMBER}"
 
-                sh "docker run -d --restart always --name nodeapp   -e DB_USERNAME=${usernameDb} -e DB_PASSWORD=${passwordDb}    -p 3000:3000   mansour100/nodeapp:${env.BUILD_NUMBER}"
+                // Pull the Docker image on the remote host
+                sh "ssh -o StrictHostKeyChecking=no -i $key $remoteHost 'docker pull $dockerImage'"
 
+                // Stop and remove the existing Docker container
+                sh "ssh -o StrictHostKeyChecking=no -i $key $remoteHost 'docker stop nodeapp 2>/dev/null || true'"
+                sh "ssh -o StrictHostKeyChecking=no -i $key $remoteHost 'docker rm nodeapp 2>/dev/null || true'"
 
+                // Run the Docker container on the remote host
+                withCredentials([usernamePassword(credentialsId: 'database', passwordVariable: 'passwordDb', usernameVariable: 'usernameDb')]) {
+                    sh "ssh -o StrictHostKeyChecking=no -i $key $remoteHost 'docker run -d --restart always --name nodeapp -e DB_USERNAME=${usernameDb} -e DB_PASSWORD=${passwordDb} -p 3000:3000 $dockerImage'"
                 }
-
-                sh "exit"
-
-             }
+            }
+        }
     }
-  }
+}
+
   stage('Post-Build Actions') {
             steps {
                      mail bcc: '',
