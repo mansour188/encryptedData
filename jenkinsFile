@@ -54,7 +54,7 @@ pipeline {
                 sh 'docker stop nodeapp 2>/dev/null || true'
                  sh 'docker rm nodeapp 2>/dev/null || true'
 
-                sh "docker run -d --name nodeapp -e DB_USERNAME=${usernameDb} -e DB_PASSWORD=${passwordDb}    -p 3000:3000   mansour100/nodeapp:${env.BUILD_NUMBER}"
+                sh "docker run -d --name nodeapp  -p 3000:3000  -e DB_USERNAME=${usernameDb} -e DB_PASSWORD=${passwordDb}    -p 3000:3000   mansour100/nodeapp:${env.BUILD_NUMBER}"
 
 
                 }
@@ -67,7 +67,7 @@ pipeline {
   stage('Post-Build Actions') {
             steps {
                      mail bcc: '',
-                     body: "hi team this result of pipeline Build URL:( ${env.BUILD_URL})  Git Commit: ${env.GIT_COMMIT}" ,
+                     body: "hi team this result of <b>pipeline Build URL</b>:( ${env.BUILD_URL})  <b>Git Commit</b>: ${env.GIT_COMMIT} <b>the result of build</b> :${currentBuild.result}" ,
                        cc: '', from: '', replyTo: '',
                        subject: "Jenkins Build ${env.JOB_NAME} #${env.BUILD_NUMBER}" , 
                         to: 'benahmedmansour89@gmail.com'
