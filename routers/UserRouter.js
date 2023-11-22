@@ -42,7 +42,6 @@ userRouter.post('/signup', async (req, res) => {
 
    
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: 'Error registering the user' });
   }
 });
@@ -55,11 +54,10 @@ userRouter.post('/signup', async (req, res) => {
 
 userRouter.post('/signin', async (req, res) => {
     var { email, password } = req.body;
-    console.log(email)
-    console.log(password)
+   
   
     User.findOne({ email }).then(async (user)=>{
-      console.log(user)
+    
        if (!user) {
       return res.status(401).json({ message: 'User not found' });
     }
@@ -67,8 +65,7 @@ userRouter.post('/signin', async (req, res) => {
     
   
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log(user.password)
-    console.log(isPasswordValid)
+   
   
     if (!isPasswordValid) {
      
@@ -107,7 +104,6 @@ userRouter.post('/signin', async (req, res) => {
         });
   
         const savedUser = await newUser.save();
-        console.log('User created:', savedUser);
       }
   
     } catch (error) {
