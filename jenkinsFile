@@ -4,6 +4,7 @@ pipeline {
   environment {
         NODEJS_HOME = tool 'nodeJs'
         PATH = "${NODEJS_HOME}/bin:${env.PATH}"
+        
     }
     
 
