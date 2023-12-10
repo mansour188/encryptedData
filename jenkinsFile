@@ -33,7 +33,7 @@ pipeline {
       }
     }
 
-     stage('Containerized Application') {
+     stage('Containerized Application') { 
             steps {
                 sh "docker build  -t mansour100/nodeapp:${env.BUILD_NUMBER} ."
                 withCredentials([usernamePassword(credentialsId: '1', passwordVariable: 'password', usernameVariable: 'username')]) {
@@ -71,6 +71,7 @@ stage('deploy') {
 
   stage('Post-Build Actions') {
             steps {
+              
                      mail bcc: '',
                      body: "hi team this result of <b>pipeline Build URL</b>:( ${env.BUILD_URL})  <b>Git Commit</b>: ${env.GIT_COMMIT} <b>the result of build</b> :${currentBuild.result}" ,
                        cc: '', from: '', replyTo: '',
