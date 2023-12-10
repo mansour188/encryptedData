@@ -76,6 +76,7 @@ stage('deploy') {
                        cc: '', from: '', replyTo: '',
                        subject: "Jenkins Build ${env.JOB_NAME} #${env.BUILD_NUMBER}" , 
                         to: 'benahmedmansour89@gmail.com'
+                        
 
                         
             }
